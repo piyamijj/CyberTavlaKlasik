@@ -70,7 +70,7 @@ const GameApp = () => {
 
 			<Dice />
 
-			<div className="flex-1 flex items-center justify-center gap-2 py-4">
+			<div className="flex items-center justify-center gap-2 py-4">
 				<CircuitRail side="left" />
 				<Board />
 				<CircuitRail side="right" />

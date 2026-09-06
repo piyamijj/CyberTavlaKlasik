@@ -42,7 +42,7 @@ export const ScorePanel = ( {
 		avatarKind === 'circuit' ? (
 			<div
 				className={ clsx(
-					'relative w-12 h-12 sm:w-14 sm:h-14 rounded-full border-2 shrink-0',
+					'relative w-9 h-9 sm:w-14 sm:h-14 rounded-full border-2 shrink-0',
 					borderGlowClass
 				) }
 				style={ {
@@ -61,7 +61,7 @@ export const ScorePanel = ( {
 		) : (
 			<div
 				className={ clsx(
-					'relative w-12 h-12 sm:w-14 sm:h-14 rounded-xl border-2 shrink-0 flex items-center justify-center',
+					'relative w-9 h-9 sm:w-14 sm:h-14 rounded-xl border-2 shrink-0 flex items-center justify-center',
 					borderGlowClass
 				) }
 				style={ {
@@ -70,7 +70,7 @@ export const ScorePanel = ( {
 						: 'radial-gradient(circle at 35% 30%, #28f4ff 0%, #0b5e66 55%, #04191b 100%)',
 				} }
 			>
-				<span className={ clsx( textColorClass, 'w-7 h-7 sm:w-8 sm:h-8' ) }>
+				<span className={ clsx( textColorClass, 'w-5 h-5 sm:w-8 sm:h-8' ) }>
 					<svg
 						viewBox="0 0 24 24"
 						fill="none"
@@ -99,13 +99,13 @@ export const ScorePanel = ( {
 		>
 			<span
 				className={ clsx(
-					'font-display font-bold text-sm sm:text-base uppercase tracking-wide',
+					'font-display font-bold text-[10px] sm:text-base uppercase tracking-normal sm:tracking-wide leading-snug',
 					textColorClass
 				) }
 			>
 				{ playerName }
 			</span>
-			<span className="font-mono text-xs sm:text-sm text-white/70 tracking-widest">
+			<span className="font-mono text-[9px] sm:text-sm text-white/70 tracking-widest">
 				SKOR: { score }
 			</span>
 		</div>
@@ -114,7 +114,7 @@ export const ScorePanel = ( {
 	return (
 		<div
 			className={ clsx(
-				'glass-panel rounded-xl border-2 flex items-center gap-3 px-3 py-2 sm:px-4 sm:py-3',
+				'glass-panel rounded-xl border-2 flex items-center gap-1.5 sm:gap-3 px-2 py-1.5 sm:px-4 sm:py-3 max-w-[48%] sm:max-w-none',
 				borderGlowClass,
 				isActiveTurn && 'animate-pulse-glow'
 			) }
