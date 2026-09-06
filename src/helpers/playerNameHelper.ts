@@ -13,12 +13,12 @@ export const getFormattedPlayerName = (
 	playerType: PlayerType | null
 ): string => {
 	if ( playerType === null ) {
-		return 'No player selected';
+		return 'Oyuncu seçilmedi';
 	}
 
 	return playerType === PlayerType.PLAYER_ONE
-		? 'Blue (Player 1)'
-		: 'Red (Player 2)';
+		? 'Oyuncu 1'
+		: 'Yapay Zeka';
 };
 
 /**
@@ -31,10 +31,10 @@ export const getFormattedPlayerNameWithEmoji = (
 	playerType: PlayerType | null
 ): string => {
 	if ( playerType === null ) {
-		return 'No player selected';
+		return 'Oyuncu seçilmedi';
 	}
 
 	return playerType === PlayerType.PLAYER_ONE
-		? '1️⃣ Blue (Player 1)'
-		: '2️⃣ Red (Player 2)';
+		? '1️⃣ Oyuncu 1'
+		: '2️⃣ Yapay Zeka';
 };

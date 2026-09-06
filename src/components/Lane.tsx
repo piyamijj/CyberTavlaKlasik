@@ -126,7 +126,7 @@ export const Lane = ( {
 				>
 					{ destinationHighlight }
 					<span className="text-[9px] uppercase tracking-widest text-white/40 font-display">
-						Bar
+						Bekleme
 					</span>
 					<div className="relative z-10 flex flex-col items-center gap-1">
 						{ checkerElements }
@@ -150,7 +150,7 @@ export const Lane = ( {
 				>
 					{ destinationHighlight }
 					<span className="text-[9px] uppercase tracking-widest text-white/40 font-display">
-						Dış
+						Çıkış
 					</span>
 					<div className="relative z-10 flex flex-col items-center gap-1">
 						{ checkerElements }

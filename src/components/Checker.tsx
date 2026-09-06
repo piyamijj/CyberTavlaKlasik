@@ -90,7 +90,7 @@ export const Checker = ( props: {
 					? 'radial-gradient(circle at 35% 30%, #ff2ec4 0%, #7a0e5c 55%, #200414 100%)'
 					: 'radial-gradient(circle at 35% 30%, #28f4ff 0%, #0b5e66 55%, #04191b 100%)',
 			} }
-			title={ `Checker ${ id }` }
+			title={ `Taş ${ id }` }
 			data-checker={ id }
 			data-player={ player }
 			data-lane={ lane }
