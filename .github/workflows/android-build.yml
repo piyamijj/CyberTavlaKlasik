@@ -1,0 +1,90 @@
+# Cyber Tavla (Klasik) — Android APK Build
+#
+# Bu workflow, Android APK'sını GitHub'ın kendi sunucularında (runner)
+# otomatik olarak derler; kullanıcının kendi bilgisayarında Android SDK
+# kurmasına gerek kalmaz. Web uygulaması derlenir (Vite → dist/), Capacitor
+# ile Android projesine (yoksa oluşturularak, varsa senkronize edilerek)
+# aktarılır ve imzasız bir "debug" APK üretilir. Üretilen APK her
+# çalıştırmada bir workflow artifact'ı olarak indirilebilir; `v*` ile
+# başlayan bir etiket (tag) push edildiğinde ise otomatik olarak bir GitHub
+# Release oluşturulup APK bu release'e eklenir.
+#
+# Önemli: JDK sürümü kasıtlı olarak 21 — Capacitor 8'in Android Gradle
+# araç zinciri JDK 21 gerektiriyor; JDK 17 ile "invalid source release: 21"
+# hatası alınır (kardeş Cyber Tavla projesinde bu sorun tespit edilip
+# düzeltilmişti, burada baştan doğru sürümle başlıyoruz).
+#
+# Not: Bu, imzasız/"debug" bir APK'dır (test ve kişisel kurulum için
+# yeterlidir). Google Play'e yüklenebilecek imzalı bir "release" APK
+# istenirse, ayrıca bir keystore oluşturup repo secret olarak eklemek
+# gerekir — bu workflow'da bu adım kurulmamıştır.
+
+name: Android APK Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install web dependencies
+        run: npm install
+
+      - name: Build web app
+        run: npm run build
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Add or sync Capacitor Android platform
+        run: |
+          if [ ! -d "android" ]; then
+            npx cap add android
+          else
+            npx cap sync android
+          fi
+
+      - name: Make gradlew executable
+        run: chmod +x android/gradlew
+
+      - name: Build debug APK
+        run: cd android && ./gradlew assembleDebug --no-daemon
+
+      - name: Locate built APK
+        run: find android -name "*.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cyber-tavla-klasik-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: Create GitHub Release with APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: android/app/build/outputs/apk/debug/app-debug.apk
+          token: ${{ secrets.GITHUB_TOKEN }}
