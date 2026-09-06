@@ -9,10 +9,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
  */
 import { useDispatch, useSelector } from 'react-redux';
 import {
-	flipDice,
 	restartGame,
-	rollDice,
-	shiftDice,
 	surrenderGame,
 	undoMove,
 } from '../data/actions';
@@ -20,7 +17,6 @@ import { StateType } from '../types';
 
 export const GameState = () => {
 	const dispatch = useDispatch();
-	const dice = useSelector( ( state: StateType ) => state.dice );
 	const gameOver = useSelector( ( state: StateType ) => state.gameOver );
 	const moveHistory = useSelector(
 		( state: StateType ) => state.moveHistory
