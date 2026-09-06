@@ -74,19 +74,21 @@
       repeating-linear-gradient(
         0deg,
         currentColor 0px,
-        currentColor 1px,
-        transparent 1px,
-        transparent 10px
+        currentColor 1.5px,
+        transparent 1.5px,
+        transparent 7px
       ),
       repeating-linear-gradient(
         90deg,
         currentColor 0px,
-        currentColor 1px,
-        transparent 1px,
-        transparent 10px
-      );
-    background-size: 10px 10px;
-    opacity: 0.35;
+        currentColor 1.5px,
+        transparent 1.5px,
+        transparent 7px
+      ),
+      radial-gradient(circle at 30% 30%, currentColor 0px, currentColor 1.5px, transparent 1.5px);
+    background-size: 7px 7px, 7px 7px, 7px 7px;
+    mix-blend-mode: screen;
+    opacity: 0.8;
   }
 
   .text-neon-magenta {
@@ -169,6 +171,13 @@
       inset 0 0 60px rgba(40, 244, 255, 0.04),
       0 20px 60px rgba(0, 0, 0, 0.55);
     position: relative;
+  }
+
+  /* Perspektif üst elemandan (.perspective-board) geliyor; bu katmanın
+     preserve-3d olması gerekiyor, yoksa 3D bağlam burada "düzleşir" ve
+     içindeki .tilt-board hiç eğik görünmez. */
+  .hologram-device {
+    transform-style: preserve-3d;
   }
 
   /* Cihazın alt kısmındaki hoparlör ızgarası çizgileri */
