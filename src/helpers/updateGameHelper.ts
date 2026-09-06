@@ -8,7 +8,6 @@ import { Dispatch } from 'redux';
  */
 import {
 	moveChecker,
-	rollDice,
 	setDice,
 	setNotice,
 	toggleCurrentPlayer,
@@ -41,9 +40,12 @@ export const updateGame = (
 	};
 	dispatch( updatePipCount( pipCount ) );
 
-	// When the turn ends (all dice used), hand off and auto-roll for the opponent.
+	// When the turn ends (all dice used), hand off to the opponent. The new
+	// current player rolls their own dice explicitly (via the "ZAR AT"
+	// button for the human, or automatically by <GameFlowController> for the
+	// AI) — this mirrors real backgammon, where each player rolls their own
+	// turn rather than the previous player's roll auto-continuing.
 	if ( ! newDice.length ) {
 		dispatch( toggleCurrentPlayer( currentPlayer ) );
-		dispatch( rollDice() );
 	}
 };

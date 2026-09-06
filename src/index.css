@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   BASE — temel sıfırlama ve genel gövde/arkaplan ayarları
+   ========================================================================== */
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: radial-gradient(ellipse at 50% 0%, #14102b 0%, #05040d 55%, #020208 100%);
+    color: #eaf6ff;
+    font-family: theme('fontFamily.body');
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  /* Sabit, tüm ekranı kaplayan çok hafif hologram taraması (scanline) dokusu.
+     Dekoratif — tıklamaları engellemesin diye pointer-events kapalı. */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: repeating-linear-gradient(
+      0deg,
+      rgba(40, 244, 255, 0.6) 0px,
+      rgba(40, 244, 255, 0.6) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    animation: scan 6s linear infinite;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: theme('fontFamily.display');
+    margin: 0;
+  }
+
+  button {
+    font-family: inherit;
+  }
+}
+
+/* ==========================================================================
+   COMPONENTS — tekrar kullanılan holografik/neon parça sınıfları
+   ========================================================================== */
+@layer components {
+  /* Camsı, bulanık arka planlı panel (skor panelleri, bildirimler, menü vb.) */
+  .glass-panel {
+    background: theme('colors.glass');
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  /* Devre kartı (PCB) dokusu — taşların üzerinde kullanılır */
+  .circuit-texture {
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        currentColor 0px,
+        currentColor 1px,
+        transparent 1px,
+        transparent 10px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        currentColor 0px,
+        currentColor 1px,
+        transparent 1px,
+        transparent 10px
+      );
+    background-size: 10px 10px;
+    opacity: 0.35;
+  }
+
+  .text-neon-magenta {
+    color: #ff2ec4;
+    text-shadow:
+      0 0 6px rgba(255, 46, 196, 0.9),
+      0 0 18px rgba(255, 46, 196, 0.6);
+  }
+
+  .text-neon-cyan {
+    color: #28f4ff;
+    text-shadow:
+      0 0 6px rgba(40, 244, 255, 0.9),
+      0 0 18px rgba(40, 244, 255, 0.6);
+  }
+
+  .border-neon-magenta-glow {
+    border-color: #ff2ec4;
+    box-shadow:
+      0 0 6px #ff2ec4,
+      0 0 18px rgba(255, 46, 196, 0.45),
+      inset 0 0 12px rgba(255, 46, 196, 0.15);
+  }
+
+  .border-neon-cyan-glow {
+    border-color: #28f4ff;
+    box-shadow:
+      0 0 6px #28f4ff,
+      0 0 18px rgba(40, 244, 255, 0.45),
+      inset 0 0 12px rgba(40, 244, 255, 0.15);
+  }
+
+  /* Tahtadaki üçgen (pip) dış hatları.
+     Kullanım: dıştaki (renkli) üçgen ile aynı boyutta, biraz içeri çekilmiş
+     arkaplan renkli bir üçgen üst üste bindirilerek "sadece çizgi" hissi
+     verilir. Bileşen tarafında iki iç içe div ile kullanılmalıdır:
+     <div class="triangle-point-up ...renk..."><div class="triangle-point-up ...inset arkaplan..." /></div> */
+  .triangle-point-up {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    width: 100%;
+    height: 100%;
+  }
+
+  .triangle-point-down {
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Alt eylem çubuğundaki hap şeklinde butonların ortak temeli */
+  .pill-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: theme('fontFamily.display');
+    font-weight: 700;
+    padding: 0.75rem 1.5rem;
+    border-width: 2px;
+    transition: all 200ms ease;
+  }
+  .pill-button:active {
+    transform: scale(0.95);
+  }
+  .pill-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  /* Tahtanın üzerinde durduğu holografik cihaz/konsol çerçevesi */
+  .hologram-device {
+    background: linear-gradient(160deg, #14121f 0%, #0a0912 55%, #050409 100%);
+    border-radius: 1.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      inset 0 2px 24px rgba(0, 0, 0, 0.6),
+      inset 0 0 60px rgba(40, 244, 255, 0.04),
+      0 20px 60px rgba(0, 0, 0, 0.55);
+    position: relative;
+  }
+
+  /* Cihazın alt kısmındaki hoparlör ızgarası çizgileri */
+  .hologram-device::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 10px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.14) 0px,
+      rgba(255, 255, 255, 0.14) 2px,
+      transparent 2px,
+      transparent 6px
+    );
+    border-radius: 4px;
+    pointer-events: none;
+  }
+}
+
+/* ==========================================================================
+   UTILITIES — 3D/perspektif ve küçük yardımcı sınıflar
+   ========================================================================== */
+@layer utilities {
+  .perspective-board {
+    perspective: 1400px;
+  }
+
+  .tilt-board {
+    transform: rotateX(38deg) rotateZ(0deg);
+    transform-style: preserve-3d;
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

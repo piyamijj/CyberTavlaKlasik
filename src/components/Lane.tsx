@@ -2,12 +2,16 @@
  * External dependencies
  */
 import { clsx } from 'clsx';
-import { useSelector } from 'react-redux';
-import { Checker } from './Checker';
+import { useDispatch, useSelector } from 'react-redux';
 
 /**
  * Internal dependencies
  */
+import { Checker } from './Checker';
+import { useSelection } from '../context/SelectionContext';
+import { useAvailableTargets } from '../hooks/useAvailableTargets';
+import { performMove } from '../helpers/programmaticMove';
+import { playMove } from '../audio/soundManager';
 import type { LaneType, StateType } from '../types';
 
 export const Lane = ( {
@@ -21,6 +25,11 @@ export const Lane = ( {
 	const currentPlayer = useSelector(
 		( state: StateType ) => state.currentPlayer
 	);
+	const dice = useSelector( ( state: StateType ) => state.dice );
+	const dispatch = useDispatch();
+	const { selectedLane, selectLane } = useSelection();
+	const availableTargets = useAvailableTargets();
+
 	const lanes = [];
 
 	const renderChecker = ( lane: number, keySuffix: string = '' ) => {
@@ -49,10 +58,10 @@ export const Lane = ( {
 			( item: any, index: number ) => (
 				<Checker
 					className="checker"
-					currentPlayer={ currentPlayer }
 					id={ item.id }
 					key={ item.id }
 					player={ item.player }
+					lane={ lane }
 					count={
 						isStackedLane &&
 						filteredCheckers.length > maxVisible &&
@@ -64,15 +73,134 @@ export const Lane = ( {
 			)
 		);
 		const key = keySuffix ? `${ player }-${ lane }` : lane.toString();
+
+		const isEven = lane % 2 === 0;
+		const isDestination = Object.values( availableTargets ).includes( lane );
+		const dieKey = Object.keys( availableTargets ).find(
+			( k ) => availableTargets[ Number( k ) ] === lane
+		);
+
+		const handleLaneClick = () => {
+			if ( ! isDestination || dieKey === undefined || selectedLane === null ) {
+				return;
+			}
+			const moverChecker = checkers.find(
+				( c: any ) => c.player === currentPlayer && c.lane === selectedLane
+			);
+			if ( ! moverChecker || currentPlayer === null ) {
+				return;
+			}
+			playMove();
+			performMove( selectedLane, {
+				id: moverChecker.id,
+				player: currentPlayer,
+				dice,
+				currentPlayer,
+				checkers,
+				die: Number( dieKey ),
+				dispatch,
+			} );
+			selectLane( null );
+		};
+
+		// Shared destination highlight, applied consistently across point /
+		// bar / off lanes alike — bearing off and bar re-entry are both
+		// legitimate "destinations" too (getAvailableLanes may resolve a
+		// target to lane 0 or 25), not just ordinary 1-24 points.
+		const destinationHighlight = isDestination && (
+			<div className="absolute inset-0 pointer-events-none rounded-md ring-2 ring-white/60 animate-pulse-glow z-20" />
+		);
+
+		if ( bar ) {
+			return (
+				<div
+					className={ clsx(
+						'lane relative w-6 sm:w-8 mx-1 rounded-md glass-panel border border-white/10',
+						'flex flex-col items-center justify-center gap-0.5 py-2 min-h-[120px]',
+						isDestination && 'cursor-pointer'
+					) }
+					data-lane={ lane }
+					data-bar={ bar }
+					onClick={ isDestination ? handleLaneClick : undefined }
+					key={ key }
+				>
+					{ destinationHighlight }
+					<span className="text-[9px] uppercase tracking-widest text-white/40 font-display">
+						Bar
+					</span>
+					<div className="relative z-10 flex flex-col items-center gap-1">
+						{ checkerElements }
+					</div>
+				</div>
+			);
+		}
+
+		if ( off ) {
+			return (
+				<div
+					className={ clsx(
+						'lane relative w-9 sm:w-10 rounded-md bg-black/30 border border-white/10',
+						'flex flex-col items-center gap-0.5 py-1 min-h-[120px]',
+						isDestination && 'cursor-pointer'
+					) }
+					data-lane={ lane }
+					data-off={ off }
+					onClick={ isDestination ? handleLaneClick : undefined }
+					key={ key }
+				>
+					{ destinationHighlight }
+					<span className="text-[9px] uppercase tracking-widest text-white/40 font-display">
+						Dış
+					</span>
+					<div className="relative z-10 flex flex-col items-center gap-1">
+						{ checkerElements }
+					</div>
+				</div>
+			);
+		}
+
 		return (
 			<div
-				className={ clsx( 'lane', bar && 'bar', off && 'off' ) }
+				className={ clsx(
+					'lane relative flex-1 flex flex-col px-0.5 min-h-[210px]',
+					isBottomLane ? 'justify-end' : 'justify-start',
+					isDestination && 'cursor-pointer'
+				) }
 				data-lane={ lane }
-				data-bar={ bar }
-				data-off={ off }
+				onClick={ isDestination ? handleLaneClick : undefined }
 				key={ key }
 			>
-				{ checkerElements }
+				{ /* decorative neon triangle outline, alternating cyan/magenta, behind the checkers */ }
+				<div className="absolute inset-0 pointer-events-none">
+					<div
+						className={ isBottomLane ? 'triangle-point-up' : 'triangle-point-down' }
+						style={ {
+							background: isEven
+								? 'rgba(40,244,255,0.16)'
+								: 'rgba(255,46,196,0.16)',
+							filter: `drop-shadow(0 0 6px ${ isEven ? '#28f4ff' : '#ff2ec4' })`,
+						} }
+					/>
+					<div
+						className={ clsx(
+							'absolute',
+							isBottomLane ? 'triangle-point-up' : 'triangle-point-down'
+						) }
+						style={ { inset: '3px', background: '#0b0a17' } }
+					/>
+				</div>
+
+				{ destinationHighlight }
+
+				{ /* the actual stacked checkers, above the decorative triangle */ }
+				<div
+					className={ clsx(
+						'relative z-10 flex flex-col gap-0.5',
+						isBottomLane ? 'flex-col-reverse' : ''
+					) }
+				>
+					{ checkerElements }
+				</div>
 			</div>
 		);
 	};
