@@ -125,9 +125,8 @@ export const Lane = ( {
 					key={ key }
 				>
 					{ destinationHighlight }
-					<span className="text-[9px] uppercase tracking-widest text-white/40 font-display">
-						Bekleme
-					</span>
+					{ /* No text label here — a narrow glowing slot, matching the
+					   reference image's plain bar/handle gap with no caption. */ }
 					<div className="relative z-10 flex flex-col items-center gap-1">
 						{ checkerElements }
 					</div>
