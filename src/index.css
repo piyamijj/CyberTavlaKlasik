@@ -173,13 +173,6 @@
     position: relative;
   }
 
-  /* Perspektif üst elemandan (.perspective-board) geliyor; bu katmanın
-     preserve-3d olması gerekiyor, yoksa 3D bağlam burada "düzleşir" ve
-     içindeki .tilt-board hiç eğik görünmez. */
-  .hologram-device {
-    transform-style: preserve-3d;
-  }
-
   /* Cihazın alt kısmındaki hoparlör ızgarası çizgileri */
   .hologram-device::after {
     content: '';
@@ -205,12 +198,16 @@
    UTILITIES — 3D/perspektif ve küçük yardımcı sınıflar
    ========================================================================== */
 @layer utilities {
-  .perspective-board {
-    perspective: 1400px;
-  }
-
+  /* Self-contained perspective+tilt on a single element, deliberately
+     WITHOUT `transform-style: preserve-3d` on any ancestor: with the
+     default `flat` mode, the board's flex-heavy contents are laid out and
+     flattened into one 2D layer first, and only THEN is that whole layer
+     tilted as a single rigid plane. Combining flexbox layout with a real
+     3D preserve-3d context caused entire rows to disappear/mis-layout in
+     testing — this flat-mode approach is the safe, reliable alternative
+     that still reads as a tilted glass surface. */
   .tilt-board {
-    transform: rotateX(8deg);
+    transform: perspective(1000px) rotateX(10deg);
   }
 
   .scrollbar-none {

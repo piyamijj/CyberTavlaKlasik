@@ -3,7 +3,7 @@
  *
  * Cyber Tavla — the physical board itself, restyled as a 3D tilted glass
  * slab resting inside a dark holographic device console (see
- * `.hologram-device`, `.perspective-board`, `.tilt-board` in ../index.css
+ * `.hologram-device` and `.tilt-board` in ../index.css
  * for the console bezel, 3D perspective, and board-tilt transform).
  *
  * This file is purely layout/chrome — all checker rendering, stacking,
@@ -21,7 +21,7 @@ import { PlayerType } from '../types';
 
 export const Board = () => {
 	return (
-		<div className="w-full max-w-3xl mx-auto perspective-board select-none">
+		<div className="w-full max-w-3xl mx-auto select-none">
 			<div className="hologram-device p-3 sm:p-5 pb-8">
 				{ /* subtle top edge highlight strip suggesting a glass bezel */ }
 				<div className="h-1 w-2/3 mx-auto mb-3 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
