@@ -210,8 +210,7 @@
   }
 
   .tilt-board {
-    transform: rotateX(38deg) rotateZ(0deg);
-    transform-style: preserve-3d;
+    transform: rotateX(8deg);
   }
 
   .scrollbar-none {
