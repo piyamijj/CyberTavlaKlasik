@@ -43,7 +43,15 @@ export const Lane = ( {
 			if ( keySuffix ) return item.player === player;
 			return true;
 		} );
-		const isStackedLane = ! bar && ! off;
+		// Cap-and-badge applies everywhere a lane can, in principle, hold every
+		// one of a player's 15 checkers: normal points, the bar, AND the
+		// bear-off ("Çıkış") tray. Previously only normal points capped their
+		// visible stack; the bear-off tray rendered every borne-off checker
+		// with no limit, so late-game (many checkers off) it grew taller than
+		// its container, stretching that side of the board frame out of
+		// shape. Always capping keeps every lane's height fixed regardless of
+		// how many checkers actually occupy it.
+		const isStackedLane = true;
 		const maxVisible = 5;
 		const visibleCheckers =
 			isStackedLane && filteredCheckers.length > maxVisible
@@ -117,6 +125,9 @@ export const Lane = ( {
 					className={ clsx(
 						'lane relative w-6 sm:w-8 mx-1 rounded-md glass-panel border border-white/10',
 						'flex flex-col items-center justify-center gap-0.5 py-2 min-h-[120px]',
+						// Same hard height guarantee as the bear-off tray below —
+						// the visible-checker cap keeps this well under it.
+						'max-h-[250px] overflow-hidden',
 						isDestination && 'cursor-pointer'
 					) }
 					data-lane={ lane }
@@ -140,6 +151,14 @@ export const Lane = ( {
 					className={ clsx(
 						'lane relative w-9 sm:w-10 rounded-md bg-black/30 border border-white/10',
 						'flex flex-col items-center gap-0.5 py-1 min-h-[120px]',
+						// max-h + overflow-hidden is a hard guarantee that this
+						// tray can never grow the board frame out of shape, no
+						// matter how many checkers are borne off. The
+						// visible-checker cap above already keeps natural
+						// content height to at most 5 checkers + the "Çıkış"
+						// label (well under this ceiling); this is the
+						// belt-and-suspenders backstop, not the primary fix.
+						'max-h-[250px] overflow-hidden',
 						isDestination && 'cursor-pointer'
 					) }
 					data-lane={ lane }
