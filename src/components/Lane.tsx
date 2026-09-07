@@ -180,7 +180,10 @@ export const Lane = ( {
 							background: isEven
 								? 'rgba(40,244,255,0.4)'
 								: 'rgba(255,46,196,0.4)',
-							filter: `drop-shadow(0 0 3px ${ isEven ? '#28f4ff' : '#ff2ec4' }) drop-shadow(0 0 12px ${ isEven ? '#28f4ff' : '#ff2ec4' }) drop-shadow(0 0 22px ${ isEven ? 'rgba(40,244,255,0.7)' : 'rgba(255,46,196,0.7)' })`,
+							// Two tight glow layers (no large-radius third layer): enough
+							// bloom to read as neon, without the blur radius growing
+							// large enough to make the tilted straight edges look wavy.
+							filter: `drop-shadow(0 0 2px ${ isEven ? '#28f4ff' : '#ff2ec4' }) drop-shadow(0 0 7px ${ isEven ? 'rgba(40,244,255,0.85)' : 'rgba(255,46,196,0.85)' })`,
 						} }
 					/>
 					<div

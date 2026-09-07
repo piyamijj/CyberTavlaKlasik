@@ -229,9 +229,15 @@
      testing — this flat-mode approach is the safe, reliable alternative
      that still reads as a tilted glass surface. */
   .tilt-board {
-    transform: perspective(900px) rotateX(14deg) scale(1.015);
+    /* Kept deliberately modest: a stronger rotateX/scale combo, together
+       with the triangles' glow blur, made the point edges read as
+       slightly wavy/uneven instead of crisp straight lines (perspective
+       keystoning scales the blur radius non-uniformly along a tilted
+       edge). This angle still reads as "tilted toward the viewer" without
+       visibly distorting the straight triangle edges. */
+    transform: perspective(1400px) rotateX(8deg);
     box-shadow:
-      0 18px 40px rgba(0, 0, 0, 0.55),
+      0 14px 32px rgba(0, 0, 0, 0.5),
       0 2px 0 rgba(255, 255, 255, 0.04);
   }
 
