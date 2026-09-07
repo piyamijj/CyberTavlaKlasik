@@ -63,12 +63,19 @@ const DieFace = ( {
 	return (
 		<div
 			className={ clsx(
-				'relative grid grid-cols-3 grid-rows-3 gap-0.5 p-1.5 sm:p-2 rounded-lg border-2 bg-space-800/90',
+				'relative grid grid-cols-3 grid-rows-3 gap-0.5 p-1.5 sm:p-2 rounded-lg border-2',
 				dims,
 				glowClass,
 				tilt,
 				clickable && 'cursor-pointer hover:scale-105 transition-transform'
 			) }
+			style={ {
+				// A subtle top-left highlight + darker base gives the die face a
+				// rounded, lit "cube facet" feel instead of a flat tinted square.
+				background:
+					'radial-gradient(circle at 30% 25%, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 45%), linear-gradient(160deg, #1c1a2e 0%, #0c0a15 100%)',
+				boxShadow: 'inset 0 1px 2px rgba(255,255,255,0.15), inset 0 -3px 6px rgba(0,0,0,0.5)',
+			} }
 			onClick={ onClick }
 		>
 			{ Array.from( { length: 9 } ).map( ( _, i ) => (

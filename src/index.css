@@ -108,17 +108,19 @@
   .border-neon-magenta-glow {
     border-color: #ff2ec4;
     box-shadow:
-      0 0 6px #ff2ec4,
-      0 0 18px rgba(255, 46, 196, 0.45),
-      inset 0 0 12px rgba(255, 46, 196, 0.15);
+      0 0 8px #ff2ec4,
+      0 0 26px rgba(255, 46, 196, 0.65),
+      0 0 46px rgba(255, 46, 196, 0.25),
+      inset 0 0 14px rgba(255, 46, 196, 0.2);
   }
 
   .border-neon-cyan-glow {
     border-color: #28f4ff;
     box-shadow:
-      0 0 6px #28f4ff,
-      0 0 18px rgba(40, 244, 255, 0.45),
-      inset 0 0 12px rgba(40, 244, 255, 0.15);
+      0 0 8px #28f4ff,
+      0 0 26px rgba(40, 244, 255, 0.65),
+      0 0 46px rgba(40, 244, 255, 0.25),
+      inset 0 0 14px rgba(40, 244, 255, 0.2);
   }
 
   /* Tahtadaki üçgen (pip) dış hatları.
@@ -181,13 +183,15 @@
 
   /* Tahtanın üzerinde durduğu holografik cihaz/konsol çerçevesi */
   .hologram-device {
-    background: linear-gradient(160deg, #14121f 0%, #0a0912 55%, #050409 100%);
+    background: linear-gradient(160deg, #191527 0%, #0c0a15 55%, #050409 100%);
     border-radius: 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow:
-      inset 0 2px 24px rgba(0, 0, 0, 0.6),
-      inset 0 0 60px rgba(40, 244, 255, 0.04),
-      0 20px 60px rgba(0, 0, 0, 0.55);
+      inset 0 2px 28px rgba(0, 0, 0, 0.65),
+      inset 0 0 80px rgba(40, 244, 255, 0.07),
+      0 0 70px rgba(255, 46, 196, 0.12),
+      0 0 110px rgba(40, 244, 255, 0.1),
+      0 25px 70px rgba(0, 0, 0, 0.6);
     position: relative;
   }
 
@@ -225,7 +229,10 @@
      testing — this flat-mode approach is the safe, reliable alternative
      that still reads as a tilted glass surface. */
   .tilt-board {
-    transform: perspective(1000px) rotateX(10deg);
+    transform: perspective(900px) rotateX(14deg) scale(1.015);
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.55),
+      0 2px 0 rgba(255, 255, 255, 0.04);
   }
 
   .scrollbar-none {
@@ -233,5 +240,21 @@
   }
   .scrollbar-none::-webkit-scrollbar {
     display: none;
+  }
+
+  /* Large soft colour blooms behind the holographic device, giving the
+     scene ambient depth/contrast (matches the reference image's glowing
+     backdrop instead of a flat black page). Purely decorative, absolutely
+     positioned and non-interactive — never affects layout/flow. */
+  .board-ambient-glow {
+    position: absolute;
+    inset: -10% -6%;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 55% 45% at 20% 15%, rgba(255, 46, 196, 0.22) 0%, transparent 65%),
+      radial-gradient(ellipse 55% 45% at 80% 20%, rgba(40, 244, 255, 0.22) 0%, transparent 65%),
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(120, 60, 255, 0.14) 0%, transparent 70%);
+    filter: blur(6px);
   }
 }

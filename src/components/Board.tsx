@@ -21,8 +21,11 @@ import { PlayerType } from '../types';
 
 export const Board = () => {
 	return (
-		<div className="w-full max-w-3xl mx-auto select-none">
-			<div className="hologram-device p-3 sm:p-5 pb-8">
+		<div className="relative w-full max-w-3xl mx-auto select-none">
+			{ /* ambient colour bloom behind the device — adds scene depth/contrast */ }
+			<div className="board-ambient-glow" />
+
+			<div className="hologram-device relative z-10 p-3 sm:p-5 pb-8">
 				{ /* subtle top edge highlight strip suggesting a glass bezel */ }
 				<div className="h-1 w-2/3 mx-auto mb-3 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 

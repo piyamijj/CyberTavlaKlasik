@@ -21,6 +21,26 @@ import { updateGame } from './updateGameHelper';
 import { validateDiceUse } from './validateMoveHelper';
 
 /**
+ * Removes exactly one occurrence of the die value that was just played from
+ * the dice array, in place.
+ *
+ * Bug fix: the die actually used to make a move is not always `dice[0]` —
+ * e.g. entering from the bar, or the "must use the larger die" rule, can
+ * both require playing `dice[1]`. Blindly calling `dice.shift()` removed
+ * whatever sat at index 0 instead of the die that was truly consumed, which
+ * could leave the *used* die still sitting in the array (making it playable
+ * again — effectively "using" the same die twice) while silently dropping
+ * the *other, unplayed* die. Removing the specific value played fixes this
+ * for both single-die and double-die (four-of-a-kind) rolls.
+ */
+const consumeDie = ( dice: number[], die: number ): void => {
+	const index = dice.indexOf( die );
+	if ( index !== -1 ) {
+		dice.splice( index, 1 );
+	}
+};
+
+/**
  * Handles the click event on a game board lane.
  *
  * @param event - The click event object.
@@ -125,7 +145,7 @@ export const handleClick = (
 		newCheckers[ hitCheckerId - 1 ].lane =
 			currentPlayer === PlayerType.PLAYER_ONE ? 25 : 0;
 		newCheckers[ id - 1 ].lane = targetLane;
-		newDice.shift();
+		consumeDie( newDice, die );
 
 		const notice = createNotice(
 			NoticeStatusType.SUCCESS,
@@ -139,7 +159,7 @@ export const handleClick = (
 
 	if ( hasWaitingChecker( { checkers, currentPlayer } ) ) {
 		newCheckers[ id - 1 ].lane = targetLane;
-		newDice.shift();
+		consumeDie( newDice, die );
 
 		const notice = createNotice(
 			NoticeStatusType.SUCCESS,
@@ -160,7 +180,7 @@ export const handleClick = (
 
 		newCheckers[ hitCheckerId - 1 ].lane = currentPlayer === PlayerType.PLAYER_ONE ? 25 : 0; // prettier-ignore
 		newCheckers[ id - 1 ].lane = targetLane;
-		newDice.shift();
+		consumeDie( newDice, die );
 
 		const notice = createNotice(
 			NoticeStatusType.SUCCESS,
@@ -211,7 +231,7 @@ export const handleClick = (
 	}
 
 	newCheckers[ id - 1 ].lane = targetLane;
-	newDice.shift();
+	consumeDie( newDice, die );
 
 	const notice = createNotice(
 		NoticeStatusType.SUCCESS,

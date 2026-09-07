@@ -169,15 +169,18 @@ export const Lane = ( {
 				onClick={ isDestination ? handleLaneClick : undefined }
 				key={ key }
 			>
-				{ /* decorative neon triangle outline, alternating cyan/magenta, behind the checkers */ }
+				{ /* decorative neon triangle outline, alternating cyan/magenta, behind the checkers.
+				   Two stacked shapes create a glowing "stroke": a bright, heavily-glowing
+				   fill sits behind a slightly-inset dark fill, leaving only a bold, lit
+				   outline visible — matching the reference image's thick neon points. */ }
 				<div className="absolute inset-0 pointer-events-none">
 					<div
 						className={ isBottomLane ? 'triangle-point-up' : 'triangle-point-down' }
 						style={ {
 							background: isEven
-								? 'rgba(40,244,255,0.16)'
-								: 'rgba(255,46,196,0.16)',
-							filter: `drop-shadow(0 0 6px ${ isEven ? '#28f4ff' : '#ff2ec4' })`,
+								? 'rgba(40,244,255,0.4)'
+								: 'rgba(255,46,196,0.4)',
+							filter: `drop-shadow(0 0 3px ${ isEven ? '#28f4ff' : '#ff2ec4' }) drop-shadow(0 0 12px ${ isEven ? '#28f4ff' : '#ff2ec4' }) drop-shadow(0 0 22px ${ isEven ? 'rgba(40,244,255,0.7)' : 'rgba(255,46,196,0.7)' })`,
 						} }
 					/>
 					<div
@@ -185,7 +188,7 @@ export const Lane = ( {
 							'absolute',
 							isBottomLane ? 'triangle-point-up' : 'triangle-point-down'
 						) }
-						style={ { inset: '3px', background: '#0b0a17' } }
+						style={ { inset: '4px', background: '#0b0a17' } }
 					/>
 				</div>
 

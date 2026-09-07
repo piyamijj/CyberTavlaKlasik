@@ -33,7 +33,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { checkAndHandleNoValidMoves } from '../helpers/noValidMovesHelper';
 import { performMove } from '../helpers/programmaticMove';
 import { chooseAIMove } from '../ai/backgammonAI';
-import { flipDice, rollDice } from '../data/actions';
+import { rollDice } from '../data/actions';
 import {
 	playDiceRoll,
 	playError,
@@ -82,25 +82,14 @@ export const GameFlowController = () => {
 			const decision = chooseAIMove( checkers, currentPlayer, dice );
 			if ( ! decision ) return;
 
-			let orderedDice = dice;
-			if (
-				dice.length === 2 &&
-				dice[ 0 ] !== dice[ 1 ] &&
-				decision.die !== dice[ 0 ]
-			) {
-				// The underlying engine always consumes `dice[0]` as the
-				// "active" die (see ../helpers/handleClickHelper.ts), so the
-				// die actually being played must be at index 0. Flip the
-				// Redux-visible dice order to match, and compute the same
-				// ordering locally to pass into this move.
-				dispatch( flipDice( dice ) );
-				orderedDice = [ dice[ 1 ], dice[ 0 ] ];
-			}
-
+			// The engine now removes the exact die value played (see
+			// `consumeDie` in ../helpers/handleClickHelper.ts), so the dice
+			// array can be passed through as-is regardless of which index
+			// `decision.die` sits at — no reordering/flipping needed.
 			performMove( decision.lane, {
 				id: decision.id,
 				player: currentPlayer,
-				dice: orderedDice,
+				dice,
 				currentPlayer,
 				checkers,
 				die: decision.die,
